@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alumnos.service.EstudiantesService;
+import com.persistence_escuela.entity.Carreras;
 import com.persistence_escuela.entity.Estudiantes;
+import com.persistence_escuela.repository.CarrerasRepository;
 import com.persistence_escuela.repository.EstudiantesRepository;
 import com.persistence_escuela.request.EstudiantesRequest;
 
@@ -15,15 +17,19 @@ public class EstudiantesImplement implements EstudiantesService{
 	
 	@Autowired
 	EstudiantesRepository repo;
+	
+	@Autowired
+	CarrerasRepository repoC;
 
 	@Override
 	public Estudiantes guardar(EstudiantesRequest request) {
 		Estudiantes e = new Estudiantes();
+		Carreras c = repoC.findById(request.getCarrera().getIdCarrera()).get();
 		e.setNombre(request.getNombre());
 		e.setTelefono(request.getTelefono());
 		e.setEmail(request.getEmail());
 		e.setFechaIngreso(request.getFechaIngreso());
-		e.setCarrera(request.getCarrera());
+		e.setCarrera(c);
 		e.setColegiatura(request.getColegiatura());
 		
 		repo.save(e);
@@ -33,11 +39,12 @@ public class EstudiantesImplement implements EstudiantesService{
 	@Override
 	public Estudiantes actualizar(EstudiantesRequest request) {
 		Estudiantes e = repo.findById(request.getIdEstudiante()).get();
+		Carreras c = repoC.findById(request.getCarrera().getIdCarrera()).get();
 		e.setNombre(request.getNombre());
 		e.setTelefono(request.getTelefono());
 		e.setEmail(request.getEmail());
 		e.setFechaIngreso(request.getFechaIngreso());
-		e.setCarrera(request.getCarrera());
+		e.setCarrera(c);
 		e.setColegiatura(request.getColegiatura());
 		repo.save(e);
 		return e;

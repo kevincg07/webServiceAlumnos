@@ -75,9 +75,14 @@ public class EstudiantesController {
 	}
 
 	@GetMapping("buscar-por-nombre/{name}")
-	ResponseEntity<Estudiantes> buscar(@PathVariable String name) {
+	ResponseEntity<?> buscar(@PathVariable String name) {
 		Estudiantes e = logic.buscar(name);
-		return new ResponseEntity<Estudiantes>(e, HttpStatus.OK);
+		if( e == null) {
+			String message = "No existe un alumno con este nombre";
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+		}else {
+			return new ResponseEntity<Estudiantes>(e, HttpStatus.OK);			
+		}
 	}
 
 	@DeleteMapping("eliminar/{id}")

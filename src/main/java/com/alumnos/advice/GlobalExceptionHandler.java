@@ -20,6 +20,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.alumnos.errors.ApiErrors;
 import com.alumnos.exception.CarreraNotFounfException;
+import com.alumnos.exception.IdAlumnoNotFoundException;
+import com.sun.research.ws.wadl.Response;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
@@ -93,5 +95,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
 	}
 	
+	@ExceptionHandler(IdAlumnoNotFoundException.class)
+	public ResponseEntity<Object> handleIdAlumnoNotFoundException(IdAlumnoNotFoundException ex){
+		String message = ex.getMessage();
+		List<String> details = new ArrayList<>();
+		details.add("Id alumno does not exist");
+		ApiErrors errors = new ApiErrors(message, details, HttpStatus.BAD_REQUEST, LocalDateTime.now());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+	}
 	
 }

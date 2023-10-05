@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alumnos.exception.CarreraNotFounfException;
+import com.alumnos.exception.IdAlumnoNotFoundException;
 import com.alumnos.service.EstudiantesService;
 import com.persistence_escuela.entity.Carreras;
 import com.persistence_escuela.entity.Estudiantes;
@@ -61,13 +62,21 @@ public class EstudiantesImplement implements EstudiantesService {
 
 	@Override
 	public Estudiantes buscar(int id) {
-		return repo.findById(id).get();
+		if (!repo.findById(id).isPresent()) {
+			throw new IdAlumnoNotFoundException("No existe un alumno con este id");
+		} else {
+			return repo.findById(id).get();
+		}
 	}
 
 	@Override
 	public String eliminar(int id) {
-		repo.deleteById(id);
-		return "Borrado";
+		if (!repo.findById(id).isPresent()) {
+			throw new IdAlumnoNotFoundException("No existe un alumno con este id");
+		} else {
+			repo.deleteById(id);
+			return "Borrado";
+		}
 	}
 
 	@Override
